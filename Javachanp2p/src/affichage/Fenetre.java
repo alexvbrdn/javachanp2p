@@ -1,14 +1,20 @@
 package affichage;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
  
 public class Fenetre extends JFrame implements ActionListener{
 	private JPanel pan = new JPanel();
+	private JTextField textPseudo = new JTextField("");
+	private JLabel labelPseudo = new JLabel("Pseudo: ");
 	private JButton boutonCreer = new JButton("Créer une salle");
 	private JButton boutonRejoindre = new JButton("Rejoindre une salle");
  
@@ -20,6 +26,10 @@ public class Fenetre extends JFrame implements ActionListener{
 		
 		boutonCreer.addActionListener(this);
 		boutonRejoindre.addActionListener(this);
+		
+		textPseudo.setPreferredSize(new Dimension(150, 30));
+		pan.add(labelPseudo);
+		pan.add(textPseudo);
 		pan.add(boutonCreer);
 		pan.add(boutonRejoindre);
 		this.setContentPane(pan);
@@ -36,6 +46,9 @@ public class Fenetre extends JFrame implements ActionListener{
 		else{
 			//Rejoindre une salle
 			System.out.println("Rejoindre une salle");
+			JOptionPane jop = new JOptionPane();
+		    String ipServeur = jop.showInputDialog(null, "Veuillez entrez l'adresse IP du serveur", "IP:port", JOptionPane.QUESTION_MESSAGE);
+		    System.out.println(ipServeur);
 		}
 		
 	}      
