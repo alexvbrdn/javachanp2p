@@ -1,9 +1,10 @@
+import affichage.Fenetre;
+
 
 public class Main {
 
 	public static void main(String[] args) {
-		System.out.println("yop 2");
-
+		new Fenetre();
 	}
 
 }
