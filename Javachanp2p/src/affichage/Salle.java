@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -18,57 +19,65 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Salle extends JFrame implements ActionListener{
 	private JTextArea textMessage = new JTextArea("");
 	private JButton boutonImage = new JButton("Selectionner une image");
 	private JButton boutonEnvoyer = new JButton("Envoyer");
+	private JLabel textIp = new JLabel();
+	private JLabel textPseudo = new JLabel();
+	private JLabel textUsers = new JLabel();
 	public Salle(String pseudo,String ipServeur){
 		this.setTitle(pseudo+"@"+ipServeur);
 		this.setSize(700, 300);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		
-		JPanel panel = new JPanel();
-	    panel.setLayout(new GridBagLayout());
+		GridLayout gl = new GridLayout(1, 3);
+	    JPanel top = new JPanel();
+	    top.setBackground(Color.gray);
+	    top.setLayout(gl);
+	    top.add(textIp);
+	    top.add(textPseudo);
+	    top.add(textUsers);
+	    textIp.setText(ipServeur);
+	    textIp.setHorizontalAlignment(SwingConstants.LEFT);
+	    textIp.setFont(new Font("Arial", Font.PLAIN, 15));
+	    textIp.setForeground(Color.blue);
+	    textPseudo.setText(pseudo);
+	    textPseudo.setHorizontalAlignment(SwingConstants.CENTER);
+	    textPseudo.setFont(new Font("Arial", Font.PLAIN, 15));
+	    textPseudo.setForeground(Color.red);
+	    textUsers.setText("1");
+	    textUsers.setHorizontalAlignment(SwingConstants.RIGHT);
+	    textUsers.setFont(new Font("Arial", Font.PLAIN, 15));
+	    textUsers.setForeground(Color.green);
 	    
-	    
-	    JEditorPane top = new JEditorPane();
-	    top.setEditable(false);
-	    top.setContentType("text/html");
-
-	    String text = "<table width=\"100%\"><tr><td align=\"left\" width=\"32%\"><strong color=\"blue\">IP: " + ipServeur + "</strong></td>"
-	    + "<td align=\"center\" width=\"34%\"><strong color=\"red\">" + pseudo + "</strong></td>"
-	    + "<td align=\"right\"  width=\"32%\"><strong color=\"green\">U: 0</strong></td></tr></table>";
-
-	    top.setText(text);
-
-	    GridBagConstraints constraints = new GridBagConstraints();
-	    constraints.gridx = 0;
-	    constraints.gridy = 0;
-	    constraints.fill = GridBagConstraints.HORIZONTAL;
-	    constraints.weightx = 1.0;
-	    constraints.insets.bottom = 5;
-
-	    panel.add(top, constraints);
-	    
-	    GridLayout gl = new GridLayout(1, 1);
-	    gl.setHgap(5);
-	    gl.setVgap(5);
+	    GridLayout gl1 = new GridLayout(1, 1);
+	    gl1.setHgap(5);
+	    gl1.setVgap(5);
 	    JPanel bottom = new JPanel();
-	    bottom.setLayout(gl);
+	    bottom.setLayout(gl1);
 	    bottom.add(textMessage);
 	    bottom.add(boutonImage);
 	    bottom.add(boutonEnvoyer);
 	    
+	    JPanel content = new JPanel();
+	    content.add(new JButton("<html><i>bllqsfjkqsdsdhghsdhsdhsdhfsdfhhsdfhsdfghsdfghsdfgsdfgsdfgsdfuhkdzdfhsdfhksdfjdfsdfusdfhsdfujhjh</i></html>"));
+	    JScrollPane pictureScrollPane = new JScrollPane(content);
+	    
+	    
 	    boutonImage.addActionListener(this);
 	    boutonEnvoyer.addActionListener(this);
 		
-		this.getContentPane().add(panel, BorderLayout.NORTH);
+		this.getContentPane().add(top, BorderLayout.NORTH);
 		this.getContentPane().add(bottom, BorderLayout.SOUTH);
+		this.getContentPane().add(pictureScrollPane, BorderLayout.CENTER);
 		this.setVisible(true);
 	}
 	@Override
@@ -78,7 +87,12 @@ public class Salle extends JFrame implements ActionListener{
 			
 		}
 		else{
-			boutonImage.setText(selectImage(boutonImage));
+			String cheminImage = selectImage(boutonImage);
+			if(cheminImage == null){
+			}
+			else{
+				boutonImage.setText(cheminImage);
+			}
 		}
 		
 	}
