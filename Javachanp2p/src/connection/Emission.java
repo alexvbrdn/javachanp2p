@@ -20,8 +20,11 @@ public class Emission implements Runnable {
 		
 		try {
 			Flux.transfert(message.aEnvoyer(), out, false);
+			
 			if(message.aUneImage()) Flux.transfert(message.getImageInputStream(), out, false);
-
+			System.out.println("message envoyé");
+			out.flush();
+			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
