@@ -73,7 +73,7 @@ public class Message {
 	public InputStream getImageInputStream(){
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		try {
-			ImageIO.write(image, "png", os);
+			ImageIO.write(image, "jpg", os);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -82,5 +82,8 @@ public class Message {
 	}
 	public String getMessage(){
 		return this.text;
+	}
+	public BufferedImage getImage(){
+		return this.image;
 	}
 }

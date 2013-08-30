@@ -1,9 +1,13 @@
 package connection;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import javax.imageio.ImageIO;
 
@@ -26,10 +30,11 @@ public class Reception implements Runnable{
 		try {
 			while(true){
 
-				byte buf[] = new byte[1024];
+				byte[] buf = new byte[1024];
 
 				try {
 					while(input.read(buf)!=-1){
+						System.out.println(rawmsg);
 						rawmsg += new String(buf);
 						if(rawmsg.contains("</message>")){
 							String[] tab = rawmsg.split("</message>");
@@ -41,8 +46,10 @@ public class Reception implements Runnable{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-				System.out.println(decodeMessage(messageinfo,rawmsg).getMessage());
+				System.out.println(messageinfo);
+				Message msg = decodeMessage(messageinfo,rawmsg);
+				System.out.println("Nouveau message : " + msg.getMessage());
+				ImageIO.write(msg.getImage(), "png", new File("C:\\Users\\Public\\Pictures\\Sample Pictures\\image.png"));
 				break;
 			}
 
@@ -63,8 +70,13 @@ public class Reception implements Runnable{
 		Boolean haveAImage = Boolean.parseBoolean(getToken(info,"<image>","</image>"));
 		if(haveAImage){
 			BufferedImage img = null;
+			System.out.println(image);
 			try {
+				
 				img = ImageIO.read(new ByteArrayInputStream(image.getBytes()));
+				if(img == null){
+					System.out.println("dfgdf");
+				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -78,6 +90,7 @@ public class Reception implements Runnable{
 
 	private String getToken(String text, String tokendebut, String tokenfin){
 		Boolean find = false;
+		System.out.println("fdfd");
 		System.out.println(text);
 		int i1;
 		for(i1 = 0; i1 < text.length() && !find; i1++){
@@ -90,6 +103,7 @@ public class Reception implements Runnable{
 				}
 			}
 		}
+
 		i1 += tokendebut.length()-1;
 		System.out.println(i1);
 		find = false;
@@ -105,6 +119,7 @@ public class Reception implements Runnable{
 			}
 		}
 		i2 -= tokenfin.length();
+
 		System.out.println(i2);
 		return text.substring(i1,i2);
 	}

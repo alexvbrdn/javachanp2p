@@ -1,9 +1,12 @@
 package connection;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+
+import javax.imageio.ImageIO;
 
 import data.Message;
 
@@ -19,7 +22,7 @@ public class Client implements Runnable{
 			socket = new Socket("127.0.0.1",2009);
 			System.out.println("Connexion établie avec le serveur, authentification"); // Si le message s'affiche c'est que je suis connecté
 
-			Thread t1 = new Thread(new Emission(socket.getOutputStream(), new Message("lol")));
+			Thread t1 = new Thread(new Emission(socket.getOutputStream(), new Message("lol",ImageIO.read(new File("C:\\Users\\ABC6\\Pictures\\Sample Pictures\\images zerg.jpg")))));
 			t1.start();
 
 
