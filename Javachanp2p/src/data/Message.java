@@ -80,5 +80,7 @@ public class Message {
 		}
 		return new ByteArrayInputStream(os.toByteArray());
 	}
-	
+	public String getMessage(){
+		return this.text;
+	}
 }
