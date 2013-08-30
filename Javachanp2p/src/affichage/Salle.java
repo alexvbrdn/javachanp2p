@@ -10,7 +10,11 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -25,6 +29,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import data.Message;
+
 public class Salle extends JFrame implements ActionListener{
 	private JTextArea textMessage = new JTextArea("");
 	private JButton boutonImage = new JButton("Selectionner une image");
@@ -32,6 +38,11 @@ public class Salle extends JFrame implements ActionListener{
 	private JLabel textIp = new JLabel();
 	private JLabel textPseudo = new JLabel();
 	private JLabel textUsers = new JLabel();
+	private String cheminImage = null;
+	private ArrayList<Message> messages = new ArrayList<Message>();
+	private GridBagConstraints gbc = new GridBagConstraints();
+	private JPanel content = new JPanel();
+	
 	public Salle(String pseudo,String ipServeur){
 		this.setTitle(pseudo+"@"+ipServeur);
 		this.setSize(700, 300);
@@ -67,9 +78,9 @@ public class Salle extends JFrame implements ActionListener{
 	    bottom.add(boutonImage);
 	    bottom.add(boutonEnvoyer);
 	    
-	    JPanel content = new JPanel();
-	    content.add(new JButton("<html><i>bllqsfjkqsdsdhghsdhsdhsdhfsdfhhsdfhsdfghsdfghsdfgsdfgsdfgsdfuhkdzdfhsdfhksdfjdfsdfusdfhsdfujhjh</i></html>"));
-	    JScrollPane pictureScrollPane = new JScrollPane(content);
+	    JScrollPane pictureScrollPane = new JScrollPane(this.content);
+	    
+	
 	    
 	    
 	    boutonImage.addActionListener(this);
@@ -84,7 +95,10 @@ public class Salle extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent arg0) {
 		Object obj = arg0.getSource();
 		if(obj.equals(boutonEnvoyer)){
-			
+			System.out.println(textMessage.getText());
+			System.out.println(this.cheminImage);
+			envoyerMessage(textMessage.getText(), this.cheminImage);
+			textMessage.setText("");
 		}
 		else{
 			String cheminImage = selectImage(boutonImage);
@@ -92,11 +106,12 @@ public class Salle extends JFrame implements ActionListener{
 			}
 			else{
 				boutonImage.setText(cheminImage);
+				this.cheminImage = cheminImage;
 			}
 		}
 		
 	}
-	public String selectImage(Component parent)
+	private String selectImage(Component parent)
 	{
 		JFileChooser fc = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Image (jpg, jpeg, gif, png)", "jpg", "gif", "jpeg", "png");
@@ -108,5 +123,19 @@ public class Salle extends JFrame implements ActionListener{
 		}
 	    return null;
 	}
-	
+	private void envoyerMessage(String message, String image)
+	{
+		if(image==null){
+			Message msg = new Message(message);
+			this.content.add(new JLabel(message));
+		}
+		else{
+			try {
+				new Message(message, ImageIO.read(new File(image)));
+			} 
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }
