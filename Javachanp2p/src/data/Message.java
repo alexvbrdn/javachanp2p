@@ -10,24 +10,24 @@ import java.util.Date;
 
 import javax.imageio.ImageIO;
 
+import connection.Connection;
+
 public class Message {
 	public Message(String str){
 		text = str;
-		type = TYPE_MESSAGE_TEXT;
+		type = Connection.TYPE_MESSAGE_TEXT;
 	}
 	
 	public Message(String str, BufferedImage img){
 		text = str;
 		image = img;
-		type = str.equals("") ? TYPE_MESSAGE_IMAGE : TYPE_MESSAGE_TEXT_IMAGE;
+		type = str.equals("") ? Connection.TYPE_MESSAGE_IMAGE : Connection.TYPE_MESSAGE_TEXT_IMAGE;
 	}
 	
 	/**
 	 * Differents type de message possible : à deplacer ou il y aurat toute les types de communications
 	 */
-	public static final byte TYPE_MESSAGE_TEXT = 0;
-	public static final byte TYPE_MESSAGE_TEXT_IMAGE = 1;
-	public static final byte TYPE_MESSAGE_IMAGE = 2;
+
 	
 	private Date date;
 	private String text;
@@ -53,7 +53,7 @@ public class Message {
 	
 	
 	public boolean aUneImage(){
-		return type == TYPE_MESSAGE_IMAGE || type == TYPE_MESSAGE_TEXT_IMAGE;
+		return type == Connection.TYPE_MESSAGE_IMAGE || type == Connection.TYPE_MESSAGE_TEXT_IMAGE;
 	}
 	
 	/**
@@ -69,7 +69,7 @@ public class Message {
 	 * 	IMAGE 	
 	 * @return
 	 */
-	public InputStream getBytes(){ //implementation du text seul
+	public InputStream getBytesInputStream(){ //implementation du text seul
 		int taille_text = text.length();
 		
 		byte taille_text_1 = (byte) (text.length() % 256);
