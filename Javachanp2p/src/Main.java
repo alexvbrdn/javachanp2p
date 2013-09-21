@@ -7,7 +7,6 @@ public class Main {
 
 	public static void main(String[] args) {
 		//new Fenetre();
-		System.out.println((byte) 255);
 		new ChatRoom("127.0.0.1",2007, new IdentiteReseau("127.0.0.1",3009,"admin"));
 	}
 
