@@ -69,7 +69,7 @@ public class Message {
 	 * 	IMAGE 	
 	 * @return
 	 */
-	public InputStream getBytesInputStream(){ //implementation du text seul
+	public InputStream getInputStream(){ //implementation du text seul
 		int taille_text = text.length();
 		
 		byte taille_text_1 = (byte) (text.length() % 256);
@@ -96,6 +96,21 @@ public class Message {
 		}
 		return new ByteArrayInputStream(os.toByteArray());
 	}
+
+	public static Message decode(InputStream in, byte type) throws IOException {
+		byte[] tailleTxt_byte = new byte[2];
+		in.read(tailleTxt_byte);
+		int tailleTxt = ((tailleTxt_byte[0] + 256)%256)*256 + (tailleTxt_byte[1] + 256)%256;
+		
+		byte[] text_byte = new byte[tailleTxt];
+		in.read(text_byte);
+		String text = "";
+		for(int i = 0 ; i < tailleTxt; i++)
+			text += (char) text_byte[i];
+		
+		return new Message(text);
+	}
+	
 	public String getMessage(){
 		return this.text;
 	}
