@@ -6,13 +6,15 @@ import java.net.Socket;
 
 public class Serveur implements Runnable {
 
-	public Serveur(int port){
+	public Serveur(int port, ChatRoom chr){
 		this.port = port;
+		this.chr = chr;
 	}
 	
 	public static boolean running = true;
 	private ServerSocket socketserver;
 	private int port;
+	private ChatRoom chr;
 	
 	public void run() {
 		running = true;
@@ -23,7 +25,7 @@ public class Serveur implements Runnable {
 			
 			while(running){
 				Socket socketduserveur  = socketserver.accept();
-				Thread t = new Thread(new Connection(socketduserveur.getInputStream(), socketduserveur.getOutputStream()));
+				Thread t = new Thread(new Connection(socketduserveur.getInputStream(), socketduserveur.getOutputStream(), chr));
 	            t.start();
 			}		
 

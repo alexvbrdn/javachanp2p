@@ -1,14 +1,18 @@
 package connection;
 
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import data.IdentiteReseau;
+
 public class Connection implements Runnable {
 
-	public Connection(InputStream in, OutputStream out){
+	public Connection(InputStream in, OutputStream out, ChatRoom chr){
 		this.in = in;
 		this.out = out;
+		this.chr = chr;
 	}
 	
 	public static final byte TYPE_MESSAGE_TEXT = 0;
@@ -18,6 +22,7 @@ public class Connection implements Runnable {
 	
 	private InputStream in;
 	private OutputStream out;
+	private ChatRoom chr;
 	
 	
 	@Override
@@ -33,13 +38,7 @@ public class Connection implements Runnable {
 				System.out.print(buf[0]);
 				switch (buf[0]) {
 				case TYPE_IDENTITE:
-					in.read(buf);
-					byte size = buf[0];
-					String pseudo = "";
-					for (byte i = 0 ; i < size ; i++){
-						in.read(buf);
-						pseudo += (char) buf[0];
-					}
+					IdentiteReseau.decode(in);
 					break;
 				}
 			}

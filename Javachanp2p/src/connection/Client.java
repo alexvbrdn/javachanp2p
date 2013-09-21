@@ -9,8 +9,9 @@ import java.net.UnknownHostException;
 
 public class Client implements Runnable{
 
-	public Client(String IP, int port) throws UnknownHostException, IOException{
+	public Client(String IP, int port, ChatRoom chr) throws UnknownHostException, IOException{
 		System.out.println("Demande de connexion au " + IP + " port:"+ port);
+		this.chr = chr;
 		socket = new Socket(IP, port);
 		out = socket.getOutputStream();
 		in = socket.getInputStream();
@@ -20,11 +21,12 @@ public class Client implements Runnable{
 	private Socket socket;
 	private OutputStream out;
 	private InputStream in;
+	private ChatRoom chr;
 	
 	@Override
 	public void run(){
 
-			Thread t1 = new Thread(new Connection(in, out));
+			Thread t1 = new Thread(new Connection(in, out, chr));
 			t1.start();
 
 	}

@@ -1,3 +1,4 @@
+import connection.ChatRoom;
 import data.IdentiteReseau;
 import affichage.Fenetre;
 
