@@ -14,11 +14,26 @@ public class ChatRoom {
 		this.identites = new ArrayList<IdentiteReseau>();
 		
 		connection(new IdentiteReseau(IP,port));
+		for(int i = 0; i < 34678567;i++) i=i+0;
+		updateUsers();
 		
 		Thread srv = new Thread(new Serveur(id.getPort(),this));
 		srv.start();
 	}
 	
+	private void updateUsers() {
+		if(!connections.isEmpty()){
+			try {
+				connections.get(0).requestListUser();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else{
+			System.out.println("Chat vide");
+		}
+	}
+
 	private IdentiteReseau id;
 	private ArrayList<Connection> connections;
 	private ArrayList<IdentiteReseau> identites;
@@ -73,7 +88,6 @@ public class ChatRoom {
 			if(!identites.contains(userList.get(i))){
 				connection(userList.get(i));
 			}
-		}
-		
+		}		
 	}
 }

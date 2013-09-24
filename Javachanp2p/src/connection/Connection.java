@@ -1,9 +1,11 @@
 package connection;
 
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
 import data.IdentiteReseau;
 import data.Message;
 
@@ -91,6 +93,12 @@ public class Connection implements Runnable {
 	
 	public void sendMessage(Message msg) throws IOException {
 		transfert(msg.getInputStream());	
+	}
+
+
+
+	public void requestListUser() throws IOException {
+		transfert(new ByteArrayInputStream(new byte[]{TYPE_REQUEST_LIST_USER}));
 	}
 	
 

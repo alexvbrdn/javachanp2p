@@ -127,6 +127,7 @@ public class IdentiteReseau {
 		ArrayList<IdentiteReseau> listUser = new ArrayList<IdentiteReseau>();
 		
 		for(int i = 0; i < numberUser_int; i++){
+			in.read();
 			listUser.add(IdentiteReseau.decode(in));
 		}
 			
