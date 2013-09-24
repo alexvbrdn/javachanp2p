@@ -10,6 +10,8 @@ import data.Message;
 public class ChatRoom {
 	public ChatRoom(String IP, int port, IdentiteReseau id){
 		this.id = id;
+		this.connections = new ArrayList<Connection>();
+		this.identites = new ArrayList<IdentiteReseau>();
 		try {
 			Thread t = new Thread(new Client(IP,port, this));
 			t.start();
@@ -28,17 +30,14 @@ public class ChatRoom {
 	private ArrayList<IdentiteReseau> identites;
 	
 	
-	private void getListUtilisateur(){
-		
-	}
-	
 	public void addMessage(Message msg){
 		
 	}
 
 	public void addIdentite(Connection connection, IdentiteReseau identite){
 		connections.add(connection);
-		identites.add(identite);			
+		identites.add(identite);
+		System.out.println("id : "+ identite.getPseudo() + " ip : " + identite.getIP() + " port : " + identite.getPort());
 	}
 	
 	public void sendMessage(Message msg){

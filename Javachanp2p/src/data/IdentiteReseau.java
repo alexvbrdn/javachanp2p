@@ -43,8 +43,9 @@ public class IdentiteReseau {
 		
 		buffer[0] = Connection.TYPE_IDENTITE;
 		buffer[1] = taille_pseudo;
-		String[] str_ip = IP.split(".");
-		for(int i = 0 ; i < 3 ; i++){
+		String[] str_ip = IP.split("\\.");
+
+		for(int i = 0 ; i < 4 ; i++){
 			buffer[i + 2] = Byte.decode(str_ip[i]);
 		}
 		buffer[6] = (byte) (port / 256);
@@ -91,5 +92,9 @@ public class IdentiteReseau {
 
 	public int getPort() {
 		return port;
+	}
+
+	public String getIP(){
+		return IP;
 	}
 }
