@@ -16,14 +16,7 @@ public class ChatRoom {
 		connection(new IdentiteReseau(IP,port));
 		
 		Thread srv = new Thread(new Serveur(id.getPort(),this));
-		srv.run();
-		
-		try {
-			wait(2000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		srv.start();
 	}
 	
 	private IdentiteReseau id;
@@ -53,7 +46,7 @@ public class ChatRoom {
 	}
 	
 	public void sendMessage(Message msg){
-		System.out.println("***debug sendmessage");
+		//System.out.println("***debug sendmessage taille:"+connections.size());
 		for(int i = 0 ; i < connections.size(); i++){
 			try {
 				connections.get(i).sendMessage(msg);
