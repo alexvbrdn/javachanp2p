@@ -3,6 +3,9 @@ package data;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.SequenceInputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import connection.Connection;
 
@@ -85,6 +88,45 @@ public class IdentiteReseau {
 		
 		return new IdentiteReseau(ip,port_int,pseudo_str);
 	}
+	
+	/**
+	 * Header:
+	 * 	1 : TYPE_USER_LIST
+	 *  2 : Nbr USERs
+	 *  
+	 *  Body:
+	 *  le nbr de paquets identités
+	 * 
+	 * @return
+	 */
+	public static InputStream userListGetInputStream(ArrayList<IdentiteReseau> ids){
+
+		byte[] buffer = new byte[2];
+		buffer[0] = Connection.TYPE_LIST_USER;
+		buffer[1] = (byte) ids.size();
+		
+		ArrayList<InputStream> inputstream = new ArrayList<InputStream>();
+		inputstream.add( new ByteArrayInputStream(buffer));
+		for(int i = 0; i < ids.size(); i++){
+			inputstream.add(ids.get(i).getInputStream());
+		}
+		return new SequenceInputStream(Collections.enumeration(inputstream));
+	}
+	
+	
+	public static ArrayList<IdentiteReseau> decodeUserList(InputStream in) throws IOException {
+		byte[] numberUser_byte = new byte[1];
+		in.read(numberUser_byte);
+		int numberUser_int = (numberUser_byte[0] + 256)%256;
+		
+		ArrayList<IdentiteReseau> listUser = new ArrayList<IdentiteReseau>();
+		
+		for(int i = 0; i < numberUser_int; i++){
+			listUser.add(IdentiteReseau.decode(in));
+		}
+			
+		return listUser;
+	}
 
 	public String getPseudo() {
 		return pseudo;
@@ -97,4 +139,6 @@ public class IdentiteReseau {
 	public String getIP(){
 		return IP;
 	}
+
+	
 }

@@ -12,14 +12,8 @@ public class ChatRoom {
 		this.id = id;
 		this.connections = new ArrayList<Connection>();
 		this.identites = new ArrayList<IdentiteReseau>();
-		try {
-			Thread t = new Thread(new Client(IP,port, this));
-			t.start();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e){
-			e.printStackTrace();
-		}
+		
+		connection(new IdentiteReseau(IP,port,"user1"));
 		
 		Thread srv = new Thread(new Serveur(id.getPort(),this));
 		srv.run();
@@ -29,6 +23,17 @@ public class ChatRoom {
 	private ArrayList<Connection> connections;
 	private ArrayList<IdentiteReseau> identites;
 	
+	private void connection(IdentiteReseau id){
+		try {
+			Thread t = new Thread(new Client(id.getIP(),id.getPort(), this));
+			t.start();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e){
+			e.printStackTrace();
+		}
+		
+	}
 	
 	public void addMessage(Message msg){
 		
@@ -52,5 +57,22 @@ public class ChatRoom {
 
 	public IdentiteReseau getIdentite() {
 		return id;
+	}
+
+	public ArrayList<IdentiteReseau> getCurrentUser() {
+		return identites;
+	}
+
+	/**
+	 * on creé toutes les nouvelles connections inhexistantes
+	 * @param userList
+	 */
+	public void addUserList(ArrayList<IdentiteReseau> userList) {
+		for(int i = 0; i < userList.size(); i ++){
+			if(!identites.contains(userList.get(i))){
+				connection(userList.get(i));
+			}
+		}
+		
 	}
 }
