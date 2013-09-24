@@ -13,7 +13,7 @@ public class ChatRoom {
 		this.connections = new ArrayList<Connection>();
 		this.identites = new ArrayList<IdentiteReseau>();
 		
-		connection(new IdentiteReseau(IP,port,"user1"));
+		connection(new IdentiteReseau(IP,port));
 		
 		Thread srv = new Thread(new Serveur(id.getPort(),this));
 		srv.run();
@@ -36,7 +36,7 @@ public class ChatRoom {
 	}
 	
 	public void addMessage(Message msg){
-		
+		System.out.println(msg.getAuthor().getPseudo() + " : " + msg.getMessage());		
 	}
 
 	public void addIdentite(Connection connection, IdentiteReseau identite){

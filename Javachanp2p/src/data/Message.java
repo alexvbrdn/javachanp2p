@@ -5,6 +5,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.SequenceInputStream;
+import java.net.UnknownHostException;
 import java.util.Date;
 
 import javax.imageio.ImageIO;
@@ -15,6 +17,11 @@ public class Message {
 	public Message(String str){
 		text = str;
 		type = Connection.TYPE_MESSAGE_TEXT;
+		try {
+			author = new IdentiteReseau(java.net.InetAddress.getLocalHost().getHostAddress(),1234);
+		} catch (UnknownHostException e) {
+			author = new IdentiteReseau("127.0.0.1",1234);
+		}
 	}
 	
 	public Message(String str, BufferedImage img){
@@ -29,6 +36,7 @@ public class Message {
 
 	
 	private Date date;
+	private IdentiteReseau author;
 	private String text;
 	private BufferedImage image;
 	private byte type;
@@ -49,11 +57,18 @@ public class Message {
 	public void setID(long ID){
 		this.ID = ID;
 	}
-	
+	public void setAuthor(IdentiteReseau id){
+		this.author = id;
+	}
 	
 	public boolean aUneImage(){
 		return type == Connection.TYPE_MESSAGE_IMAGE || type == Connection.TYPE_MESSAGE_TEXT_IMAGE;
 	}
+	
+	public IdentiteReseau getAuthor(){
+		return this.author;
+	}
+	
 	
 	/**
 	 * encodage :
@@ -65,7 +80,8 @@ public class Message {
 	 *			3 prochains octets taille de l'image
 	 * BODY :
 	 * 	TEXT
-	 * 	IMAGE 	
+	 * 	IMAGE
+	 * 	AUTEUR
 	 * @return
 	 */
 	public InputStream getInputStream(){ //implementation du text seul
@@ -82,7 +98,7 @@ public class Message {
 		for( int i = 0 ; i < taille_text; i++){
 			buffer[i + 3] = (byte) text.charAt(i);
 		}
-		return new ByteArrayInputStream( buffer );
+		return new SequenceInputStream(new ByteArrayInputStream( buffer ),author.getInputStream());
 	}
  
 	public InputStream getImageInputStream(){
@@ -106,8 +122,10 @@ public class Message {
 		String text = "";
 		for(int i = 0 ; i < tailleTxt; i++)
 			text += (char) text_byte[i];
-		
-		return new Message(text);
+		in.read();//lit l'entete de l'identiteReseau
+		Message msg = new Message(text);
+		msg.setAuthor(IdentiteReseau.decode(in));
+		return msg;
 	}
 	
 	public String getMessage(){

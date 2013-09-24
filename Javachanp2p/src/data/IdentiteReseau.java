@@ -17,6 +17,11 @@ public class IdentiteReseau {
 		this.port = port;
 	}
 	
+	public IdentiteReseau(String IP, int port) {
+		this.IP = IP;
+		this.port = port;
+	}
+
 	private String pseudo;
 	private String IP;
 	private int port;
