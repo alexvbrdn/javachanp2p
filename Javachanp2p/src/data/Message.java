@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
 import java.net.UnknownHostException;
-import java.util.Date;
+//import java.util.Date;
 
 import javax.imageio.ImageIO;
 
@@ -35,14 +35,14 @@ public class Message {
 	 */
 
 	
-	private Date date;
+	//private Date date;
 	private IdentiteReseau author;
 	private String text;
 	private BufferedImage image;
 	private byte type;
-	private long ID = 0;
+	//private long ID = 0;
 	
-	public void genereDate(){
+	/*public void genereDate(){
 		date = new Date();
 	}
 	
@@ -56,7 +56,7 @@ public class Message {
 	
 	public void setID(long ID){
 		this.ID = ID;
-	}
+	}*/
 	public void setAuthor(IdentiteReseau id){
 		this.author = id;
 	}

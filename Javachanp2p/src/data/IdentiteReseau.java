@@ -4,6 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -11,14 +13,36 @@ import connection.Connection;
 
 public class IdentiteReseau {
 
+	public IdentiteReseau(String pseudo) throws IOException{
+		this.port = 0;
+		this.pseudo = pseudo;
+		this.IP = InetAddress.getLocalHost().getHostAddress ();
+	}
+	public IdentiteReseau(int port, String pseudo) throws UnknownHostException{
+		this.port = port;
+		this.pseudo = pseudo;
+		this.IP = InetAddress.getLocalHost ().getHostAddress ();
+	}
 	public IdentiteReseau(String IP, int port, String pseudo){
 		this.pseudo = pseudo;
-		this.IP = IP;
+		try {
+			this.IP = InetAddress.getByName(IP).getHostAddress();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			this.IP = IP;
+		}
 		this.port = port;
 	}
 	
 	public IdentiteReseau(String IP, int port) {
-		this.IP = IP;
+		try {
+			this.IP = InetAddress.getByName(IP).getHostAddress();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			this.IP = IP;
+		}
 		this.port = port;
 	}
 
@@ -54,7 +78,8 @@ public class IdentiteReseau {
 		String[] str_ip = IP.split("\\.");
 
 		for(int i = 0 ; i < 4 ; i++){
-			buffer[i + 2] = Byte.decode(str_ip[i]);
+			int ip_byte = Integer.decode(str_ip[i]);
+			buffer[i + 2] = (byte) (ip_byte);
 		}
 		buffer[6] = (byte) (port / 256);
 		buffer[7] = (byte) (port % 256);

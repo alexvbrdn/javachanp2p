@@ -3,35 +3,31 @@ package affichage;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import connection.ChatRoom;
 import data.Message;
 
 public class Salle extends JFrame implements ActionListener{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTextArea textMessage = new JTextArea("");
 	private JButton boutonImage = new JButton("Selectionner une image");
 	private JButton boutonEnvoyer = new JButton("Envoyer");
@@ -39,12 +35,17 @@ public class Salle extends JFrame implements ActionListener{
 	private JLabel textPseudo = new JLabel();
 	private JLabel textUsers = new JLabel();
 	private String cheminImage = null;
-	private ArrayList<Message> messages = new ArrayList<Message>();
-	private GridBagConstraints gbc = new GridBagConstraints();
+
 	private JPanel content = new JPanel();
 	
-	public Salle(String pseudo,String ipServeur){
-		this.setTitle(pseudo+"@"+ipServeur);
+	private String pseudo;
+	private ChatRoom chatroom;
+	
+	public Salle(ChatRoom chatroom){
+		this.chatroom = chatroom;
+		this.pseudo = chatroom.getIdentite().getPseudo();
+		
+		this.setTitle(pseudo+"@" + "Ici bientot le nom du chat !");
 		this.setSize(700, 300);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
@@ -56,7 +57,7 @@ public class Salle extends JFrame implements ActionListener{
 	    top.add(textIp);
 	    top.add(textPseudo);
 	    top.add(textUsers);
-	    textIp.setText(ipServeur);
+	    textIp.setText(chatroom.getIdentite().getIP());//notre ip le serveur n'existe pas c'est du p2p
 	    textIp.setHorizontalAlignment(SwingConstants.LEFT);
 	    textIp.setFont(new Font("Arial", Font.PLAIN, 15));
 	    textIp.setForeground(Color.blue);
@@ -95,8 +96,9 @@ public class Salle extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent arg0) {
 		Object obj = arg0.getSource();
 		if(obj.equals(boutonEnvoyer)){
-			System.out.println(textMessage.getText());
-			System.out.println(this.cheminImage);
+			System.out.println("*** Salle : " + pseudo + " nouveau message créé : " + textMessage.getText());
+			//System.out.println(this.cheminImage);
+			
 			envoyerMessage(textMessage.getText(), this.cheminImage);
 			textMessage.setText("");
 		}
@@ -126,8 +128,12 @@ public class Salle extends JFrame implements ActionListener{
 	private void envoyerMessage(String message, String image)
 	{
 		if(image==null){
+			if(message == null){
+				return;
+			}
 			Message msg = new Message(message);
 			this.content.add(new JLabel(message));
+			chatroom.sendMessage(msg);
 		}
 		else{
 			try {
@@ -137,5 +143,10 @@ public class Salle extends JFrame implements ActionListener{
 				e.printStackTrace();
 			}
 		}
+	}
+	public void addMessage(Message msg) {			
+		this.content.add(new JLabel(msg.getMessage()));
+		System.out.println("***Salle : " + pseudo + " ajout d'un nouveau message : " + msg.getMessage());
+		this.repaint();
 	}
 }

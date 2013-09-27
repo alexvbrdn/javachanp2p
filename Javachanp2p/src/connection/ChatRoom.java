@@ -3,22 +3,39 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
+import affichage.Salle;
 import data.IdentiteReseau;
 import data.Message;
 
 
 public class ChatRoom {
+
 	public ChatRoom(String IP, int port, IdentiteReseau id){
 		this.id = id;
 		this.connections = new ArrayList<Connection>();
 		this.identites = new ArrayList<IdentiteReseau>();
 		
+		System.out.println("***ChatRoom : Création d'un client");
 		connection(new IdentiteReseau(IP,port));
-		for(int i = 0; i < 34678567;i++) i=i+0;
+		for(int i = 0; i < 34678567;i++) i=i+0;//wait a little
 		updateUsers();
 		
 		Thread srv = new Thread(new Serveur(id.getPort(),this));
 		srv.start();
+		
+		salle = new Salle(this);
+	}
+	
+	public ChatRoom(IdentiteReseau id){
+		this.id = id;
+		this.connections = new ArrayList<Connection>();
+		this.identites = new ArrayList<IdentiteReseau>();
+		System.out.println("***ChatRoom : Création d'un serveur port:" + id.getPort());
+		
+		Thread srv = new Thread(new Serveur(id.getPort(),this));
+		srv.start();
+		
+		salle = new Salle(this);
 	}
 	
 	private void updateUsers() {
@@ -37,6 +54,7 @@ public class ChatRoom {
 	private IdentiteReseau id;
 	private ArrayList<Connection> connections;
 	private ArrayList<IdentiteReseau> identites;
+	private Salle salle;
 	
 	private void connection(IdentiteReseau id){
 		try {
@@ -51,6 +69,7 @@ public class ChatRoom {
 	}
 	
 	public void addMessage(Message msg){
+		salle.addMessage(msg);
 		System.out.println(msg.getAuthor().getPseudo() + " : " + msg.getMessage());		
 	}
 
@@ -62,6 +81,8 @@ public class ChatRoom {
 	
 	public void sendMessage(Message msg){
 		//System.out.println("***debug sendmessage taille:"+connections.size());
+		//on signe le message
+		msg.setAuthor(id);
 		for(int i = 0 ; i < connections.size(); i++){
 			try {
 				connections.get(i).sendMessage(msg);
@@ -85,7 +106,8 @@ public class ChatRoom {
 	 */
 	public void addUserList(ArrayList<IdentiteReseau> userList) {
 		for(int i = 0; i < userList.size(); i ++){
-			if(!identites.contains(userList.get(i))){
+			IdentiteReseau iden = userList.get(i);
+			if(!identites.contains(iden) && !iden.equals(id)){
 				connection(userList.get(i));
 			}
 		}		
